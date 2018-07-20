@@ -1,3 +1,15 @@
+/******************************************************************************
+ *  Compilation:  javac WeightedQuickUnionUF.java
+ *  Execution:  java WeightedQuickUnionUF < input.txt
+ *  Dependencies: StdIn.java StdOut.java
+ *  Data files:   https://algs4.cs.princeton.edu/15uf/tinyUF.txt
+ *                https://algs4.cs.princeton.edu/15uf/mediumUF.txt
+ *                https://algs4.cs.princeton.edu/15uf/largeUF.txt
+ *
+ *  Precolation
+ *
+ ******************************************************************************/
+
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.QuickFindUF;
@@ -6,46 +18,65 @@ import edu.princeton.cs.algs4.StdOut;
 public class Percolation {
     private QuickFindUF uf;
     private int size;
+    private int vtop = 0;
+    private int vbtm;
+    private boolean grid[][];
 
     private int getIndex(int i, int j){
-      return (i-1)*size + (j-1);
+
+
+      return (i-1)*size + j;
+    }
+
+    private void connectIfOpen(int i, int j){
+      uf.union(i, j);
     }
 
     public Percolation(int n){          // create n-by-n grid, with all sites blocked
       uf = new QuickFindUF(n*n + 2);    // +2 for vitual top and bottom
       size = n;
-      int i = 0;
+      vbtm = size*size + 1;
+      grid = new boolean[n][n];
     }
 
     public void open(int row, int col){       // open site (row, col) if it is not open already
+
       int index = getIndex(row, col);
-      StdOut.print(index);
-      // row = row * size;
-      // connect to left if left is open
-      // connect to right if right is open
-      // connect to top if top is open
-      // connect to bottom if bottom is open
+      grid[row-1][col-1] = true;
+
+      // if it is in the first row, connect to top
+      if (row == 1) { uf.union(index, vtop); }
+      if (row == size) { uf.union(index, vbtm); }
+
+      connectIfOpen(getIndex(row, col+1), index); // right
+      //connectIfOpen(getIndex(row, col-1), index); // left
+      //connectIfOpen(getIndex(row-1, col), index); // top
+      //connectIfOpen(getIndex(row+1, col), index); // bottom
     }
 
     public boolean isOpen(int row, int col){  // is site (row, col) open?
-      //return uf.connected(row, col);
-      return true;
+      //if (i*j <= 0 && i*j > size*size){
+      //  throw new java.lang.IllegalArgumentException();
+      //}
+      return grid[row-1][col-1];
     }
 
     public boolean isFull(int row, int col){  // is site (row, col) full?
-      return true;
+      return uf.connected(vtop, getIndex(row, col));
     }
 
     public int numberOfOpenSites(){           // number of open sites
-      return 2;
+      return uf.count();
     }
 
     public boolean percolates(){              // does the system percolate?
-      return true;
+      return uf.connected(vtop, vbtm);
     }
 
     public static void main(String[] args){    // test client (optional)
       Percolation p = new Percolation(3);
-      p.open(2,3);
+      p.open(1,1);
+      //StdOut.print(p.isOpen(1,1));
+      //StdOut.print(p.isFull(1,1));
     }
 }
