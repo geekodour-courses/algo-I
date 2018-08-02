@@ -23,14 +23,16 @@ public class Percolation {
     private boolean grid[][];
 
     private int getIndex(int i, int j){
-
-
       return (i-1)*size + j;
     }
 
-    private void connectIfOpen(int i, int j){
-      uf.union(i, j);
+    private void validateIndex(int i, int j){
+      if(i <= 0 || i > size || j <= 0 || j > size) throw new java.lang.IllegalArgumentException();
     }
+
+    //private void connectIfOpen(int i, int j){
+    //  uf.union(i, j);
+    //}
 
     public Percolation(int n){          // create n-by-n grid, with all sites blocked
       uf = new QuickFindUF(n*n + 2);    // +2 for vitual top and bottom
@@ -41,14 +43,23 @@ public class Percolation {
 
     public void open(int row, int col){       // open site (row, col) if it is not open already
 
+      // validate row and col
+      validateIndex(row, col);
       int index = getIndex(row, col);
+
+      // mark the site as open
       grid[row-1][col-1] = true;
+
 
       // if it is in the first row, connect to top
       if (row == 1) { uf.union(index, vtop); }
       if (row == size) { uf.union(index, vbtm); }
 
-      connectIfOpen(getIndex(row, col+1), index); // right
+      // call uniunion methods
+
+      if( uf.find(getIndex(row, col+1)) == getIndex(row, col+1) ){
+      }
+      //connectIfOpen(getIndex(row, col+1), index); // right
       //connectIfOpen(getIndex(row, col-1), index); // left
       //connectIfOpen(getIndex(row-1, col), index); // top
       //connectIfOpen(getIndex(row+1, col), index); // bottom
@@ -73,10 +84,11 @@ public class Percolation {
       return uf.connected(vtop, vbtm);
     }
 
-    public static void main(String[] args){    // test client (optional)
+    public void main(String[] args){    // test client (optional)
       Percolation p = new Percolation(3);
       p.open(1,1);
-      //StdOut.print(p.isOpen(1,1));
+      p.open(1,2);
+      StdOut.print(uf.connected(1,2));
       //StdOut.print(p.isFull(1,1));
     }
 }
