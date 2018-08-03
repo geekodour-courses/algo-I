@@ -4,8 +4,8 @@ import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdIn;
 
 public class PercolationStats {
-  private int _trials;
-  private double tresholds[];
+  final private int _trials;
+  final private double tresholds[];
 
   public PercolationStats(int n, int trials){    // perform trials independent experiments on an n-by-n grid
     if(n <= 0 || trials <= 0){ throw new IllegalArgumentException(); }

@@ -13,9 +13,9 @@ import edu.princeton.cs.algs4.StdOut;
 public class Percolation {
 
   private boolean grid[][];
-  public WeightedQuickUnionUF uf;
+  final private WeightedQuickUnionUF uf;
   private int openSites;
-  private int size;
+  final private int size;
 
   private int encode(int i, int j){
     return size*(i-1) + j;
