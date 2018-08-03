@@ -50,13 +50,8 @@ public class Percolation {
     connectIfOpen(row, col-1, row, col);
     connectIfOpen(row, col+1, row, col);
     openSites += 1;
-
-    if(row == 1){
-      uf.union(0, encode(row, col));
-    }
-    if(row == size){
-      uf.union(size*size+1, encode(row, col));
-    }
+    if(row == 1){ uf.union(0, encode(row, col)); }
+    if(row == size){ uf.union(size*size+1, encode(row, col)); }
   }
 
   public boolean isOpen(int row, int col){     // is site (row, col) open?
