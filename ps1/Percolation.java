@@ -45,13 +45,20 @@ public class Percolation {
   public void open(int row, int col){          // open site (row, col) if it is not open already
     validate(row, col);
     grid[row-1][col-1] = true;
+
     connectIfOpen(row-1, col, row, col);
     connectIfOpen(row+1, col, row, col);
     connectIfOpen(row, col-1, row, col);
     connectIfOpen(row, col+1, row, col);
+
     openSites += 1;
+
     if(row == 1){ uf.union(0, encode(row, col)); }
-    if(row == size){ uf.union(size*size+1, encode(row, col)); }
+    if(row == size){
+      if(isFull(row, col)){
+        uf.union(size*size+1, encode(row, col));
+      }
+    }
   }
 
   public boolean isOpen(int row, int col){     // is site (row, col) open?
