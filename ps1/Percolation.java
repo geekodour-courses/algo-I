@@ -18,6 +18,7 @@ public class Percolation {
     private final int size;
 
     public Percolation(int n) {                 // create n-by-n grid, with all sites blocked
+        if (n <= 0) throw new IllegalArgumentException();
         grid = new boolean[n][n];
         uf = new WeightedQuickUnionUF(n*n+2);
         openSites = 0;
@@ -29,7 +30,7 @@ public class Percolation {
     }
 
     private void validate(int row, int col) {
-        if ((row <= 0 || row > size) && (col <= 0 || col > size)) throw new IllegalArgumentException();
+        if (!((row > 0 && row <= size) && (col > 0 && col <= size))) throw new IllegalArgumentException();
     }
 
     private void connectIfOpen(int row, int col, int rowO, int colO) {
@@ -80,8 +81,8 @@ public class Percolation {
     }
 
     public static void main(String[] args) {      // test client (optional)
-        Percolation p = new Percolation(1);
-        p.open(1, 1);
+        Percolation p = new Percolation(3);
+        p.open(1, -1);
         StdOut.println(p.percolates());
     }
 
